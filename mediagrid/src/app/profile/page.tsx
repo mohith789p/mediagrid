@@ -5,7 +5,8 @@ import MainLayout from "@/components/layout/MainLayout";
 import ProfileHeader from "@/components/users/ProfileHeader";
 import PostList from "@/components/posts/PostList";
 import { PostType } from "@/components/posts/PostCard";
-import { useAuth, UserProfile } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { UserProfile } from "@/contexts/AuthContext";
 import {
   collection,
   query,
@@ -15,8 +16,6 @@ import {
   doc,
   getDoc,
   updateDoc,
-  arrayRemove,
-  arrayUnion,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -34,7 +33,6 @@ const ProfilePage: React.FC = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [followers, setFollowers] = useState<UserProfile[]>([]);
   const [following, setFollowing] = useState<UserProfile[]>([]);
-  const [profileUser, setProfileUser] = useState<UserProfile | null>(null);
 
   const userIdParam =
     params && typeof params.userId === "string"
@@ -60,8 +58,6 @@ const ProfilePage: React.FC = () => {
           const userDoc = await getDoc(doc(db, "users", profileId));
 
           if (userDoc.exists()) {
-            setProfileUser(userDoc.data() as UserProfile);
-
             // Fetch followers
             const userFollowers = userDoc.data().followers || [];
             if (userFollowers.length > 0) {

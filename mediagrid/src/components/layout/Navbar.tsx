@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,6 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ className, onOpenNotifications }) => {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
-  const [notifOpen, setNotifOpen] = useState(false);
 
   const handleLogout = async () => {
     try {

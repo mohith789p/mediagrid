@@ -11,7 +11,6 @@ import {
   SlidersHorizontal,
   User,
   Loader2,
-  AlertCircle,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,7 +56,8 @@ const ChatAIPage = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<ConversationHistory>([]);
+  const [conversationHistory, setConversationHistory] =
+    useState<ConversationHistory>([]);
   const [apiConfigured, setApiConfigured] = useState<boolean | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -72,36 +72,37 @@ const ChatAIPage = () => {
   useEffect(() => {
     const configured = isAIConfigured();
     setApiConfigured(configured);
-    
+
     if (messages.length === 0) {
       setMessages([
         {
           id: "welcome",
-          content: configured 
-            ? "Hello! I'm MediaGrid AI powered by Hugging Face. How can I assist you today?" 
+          content: configured
+            ? "Hello! I'm MediaGrid AI powered by Hugging Face. How can I assist you today?"
             : "Hello! I'm MediaGrid AI. Please note that I'm running in demo mode because the Hugging Face token is not configured. Responses will be limited.",
           sender: "ai",
           timestamp: new Date(),
           error: !configured,
         },
       ]);
-      
+
       if (!configured) {
         toast({
           title: "Hugging Face Token Not Configured",
-          description: "MediaGrid AI is running in demo mode. Set NEXT_PUBLIC_HF_TOKEN in your environment to enable full functionality.",
+          description:
+            "MediaGrid AI is running in demo mode. Set NEXT_PUBLIC_HF_TOKEN in your environment to enable full functionality.",
           variant: "destructive",
         });
       }
     }
-  }, []);
+  }, [messages.length, toast]);
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!input.trim()) return;
-    
+
     const userInput = input.trim();
-    
+
     // Add user message
     const userMessage: MessageType = {
       id: Date.now().toString(),
@@ -109,50 +110,56 @@ const ChatAIPage = () => {
       sender: "user",
       timestamp: new Date(),
     };
-    
+
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    
+
     // Show typing indicator
     setIsTyping(true);
-    
+
     // Update conversation history for context
-    const updatedHistory = [...conversationHistory, { role: 'user', content: userInput }];
+    const updatedHistory = [
+      ...conversationHistory,
+      { role: "user", content: userInput },
+    ];
     setConversationHistory(updatedHistory);
-    
+
     try {
       if (apiConfigured) {
         // Call the real AI service
         const response = await sendMessageToAI(userInput, updatedHistory);
-        
+
         setIsTyping(false);
-        
+
         const aiMessage: MessageType = {
           id: response.id || Date.now().toString(),
           content: response.text,
           sender: "ai",
           timestamp: new Date(),
         };
-        
+
         setMessages((prev) => [...prev, aiMessage]);
-        
+
         // Update conversation history with AI response
-        setConversationHistory([...updatedHistory, { role: 'assistant', content: response.text }]);
+        setConversationHistory([
+          ...updatedHistory,
+          { role: "assistant", content: response.text },
+        ]);
       } else {
         // Fallback to demo mode with delayed response
         setTimeout(() => {
           setIsTyping(false);
-          
+
           const demoResponses = [
             "I'm in demo mode because the Hugging Face token isn't configured. I can still chat, but with limited capabilities.",
             "This is a demo response. To enable full AI capabilities with DeepSeek-R1 model, please configure the Hugging Face token in your environment variables.",
             "I'm MediaGrid AI in demo mode. My responses are pre-defined since I'm not connected to the Hugging Face API.",
             "In demo mode, I can only provide basic responses. Set up the Hugging Face token to unlock my full potential with the DeepSeek-R1 model!",
-            "This is a simulated response. For the full AI experience with Hugging Face's models, please configure your API credentials."
+            "This is a simulated response. For the full AI experience with Hugging Face's models, please configure your API credentials.",
           ];
-          
+
           const randomIndex = Math.floor(Math.random() * demoResponses.length);
-          
+
           const aiMessage: MessageType = {
             id: Date.now().toString(),
             content: demoResponses[randomIndex],
@@ -160,25 +167,26 @@ const ChatAIPage = () => {
             timestamp: new Date(),
             error: true,
           };
-          
+
           setMessages((prev) => [...prev, aiMessage]);
         }, 1000 + Math.random() * 1000);
       }
     } catch (error) {
       console.error("Error getting AI response:", error);
-      
+
       setIsTyping(false);
-      
+
       const errorMessage: MessageType = {
         id: Date.now().toString(),
-        content: "I'm sorry, I encountered an error processing your request. Please try again later.",
+        content:
+          "I'm sorry, I encountered an error processing your request. Please try again later.",
         sender: "ai",
         timestamp: new Date(),
         error: true,
       };
-      
+
       setMessages((prev) => [...prev, errorMessage]);
-      
+
       toast({
         title: "Error",
         description: "Failed to get a response from the AI service.",
@@ -232,9 +240,9 @@ const ChatAIPage = () => {
                   </div>
                   {message.sender === "user" && (
                     <Avatar className="h-8 w-8 border border-[var(--color-border)]">
-                      <AvatarImage 
-                        src={currentUser?.photoURL || undefined} 
-                        alt={currentUser?.displayName || "User"} 
+                      <AvatarImage
+                        src={currentUser?.photoURL || undefined}
+                        alt={currentUser?.displayName || "User"}
                       />
                       <AvatarFallback className="bg-[var(--color-primary)] text-white">
                         <User className="h-5 w-5" />
@@ -243,7 +251,7 @@ const ChatAIPage = () => {
                   )}
                 </div>
               ))}
-              
+
               {/* Typing indicator */}
               {isTyping && (
                 <div className="flex items-start gap-3 max-w-[85%]">
@@ -258,7 +266,7 @@ const ChatAIPage = () => {
                   </div>
                 </div>
               )}
-              
+
               {/* Invisible element to scroll to */}
               <div ref={messagesEndRef} />
             </div>

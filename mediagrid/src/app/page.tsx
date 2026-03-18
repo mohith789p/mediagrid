@@ -231,7 +231,7 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Demo Posts */}
+        {/* Posts */}
         <div className="w-full max-w-3xl mx-auto">
           {demoPosts.map((post) => (
             <div

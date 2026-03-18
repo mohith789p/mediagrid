@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -36,7 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
       let message = "Something went wrong. Please try again.";
 
       if (typeof err === "object" && err !== null && "code" in err) {
-        const errorCode = (err as any).code;
+        const errorCode = (err as { code: string }).code;
         switch (errorCode) {
           case "auth/user-not-found":
             message = "IUser not found.";
@@ -70,13 +70,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
     >
       <CardHeader>
         <CardTitle
-          className="text-2xl text-center font-bold"
+          className="text-3xl text-center font-bold"
           style={{ color: "var(--color-primary)" }}
         >
           Login to MediaGrid
         </CardTitle>
         <CardDescription
-          className="text-center"
+          className="text-center text-md"
           style={{ color: "var(--color-text-secondary)" }}
         >
           Enter your credentials to access your account
@@ -94,7 +94,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
           <div className="space-y-2">
             <label
               htmlFor="email"
-              className="text-sm font-medium"
+              className="text-lg font-medium"
               style={{ color: "var(--color-text)" }}
             >
               Email
@@ -113,7 +113,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
           <div className="space-y-2">
             <label
               htmlFor="password"
-              className="text-sm font-medium"
+              className="text-lg font-medium"
               style={{ color: "var(--color-text)" }}
             >
               Password
@@ -135,7 +135,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleForm }) => {
                 style={{ color: "var(--color-text-secondary)" }}
                 tabIndex={-1}
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>

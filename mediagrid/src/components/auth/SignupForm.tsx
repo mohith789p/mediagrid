@@ -40,23 +40,25 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
 
     try {
       await signup(email, password, name);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Signup error:", err);
       let message = "Something went wrong. Please try again.";
 
-      switch (err.code) {
-        case "auth/email-already-in-use":
-          message = "This email is already in use. Please log in instead.";
-          break;
-        case "auth/invalid-email":
-          message = "The email address is invalid.";
-          break;
-        case "auth/weak-password":
-          message = "Password is too weak.";
-          break;
-        case "auth/network-request-failed":
-          message = "Network error. Please check your connection.";
-          break;
+      if (typeof err === "object" && err !== null && "code" in err) {
+        switch ((err as { code: string }).code) {
+          case "auth/email-already-in-use":
+            message = "This email is already in use. Please log in instead.";
+            break;
+          case "auth/invalid-email":
+            message = "The email address is invalid.";
+            break;
+          case "auth/weak-password":
+            message = "Password is too weak.";
+            break;
+          case "auth/network-request-failed":
+            message = "Network error. Please check your connection.";
+            break;
+        }
       }
 
       setError(message);
@@ -67,7 +69,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
 
   return (
     <Card
-      className="w-full max-w-md animate-fade-in border shadow-2xl"
+      className="w-full max animate-fade-in border shadow-2xl"
       style={{
         borderColor: "var(--color-border)",
         background: "var(--color-bg)",
@@ -75,7 +77,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
     >
       <CardHeader>
         <CardTitle
-          className="text-2xl text-center font-bold"
+          className="text-3xl text-center font-bold"
           style={{ color: "var(--color-primary)" }}
         >
           Create an Account
@@ -99,7 +101,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
           <div className="space-y-2">
             <label
               htmlFor="name"
-              className="text-sm font-medium"
+              className="text-lg font-medium"
               style={{ color: "var(--color-text)" }}
             >
               Full Name
@@ -118,7 +120,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
           <div className="space-y-2">
             <label
               htmlFor="email"
-              className="text-sm font-medium"
+              className="text-lg font-medium"
               style={{ color: "var(--color-text)" }}
             >
               Email
@@ -137,7 +139,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
           <div className="space-y-2">
             <label
               htmlFor="password"
-              className="text-sm font-medium"
+              className="text-lg font-medium"
               style={{ color: "var(--color-text)" }}
             >
               Password
@@ -167,7 +169,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
           <div className="space-y-2">
             <label
               htmlFor="confirmPassword"
-              className="text-sm font-medium"
+              className="text-lg font-medium"
               style={{ color: "var(--color-text)" }}
             >
               Confirm Password
@@ -189,7 +191,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onToggleForm }) => {
                 className="absolute right-3 top-1/2 -translate-y-1/2"
                 style={{ color: "var(--color-text-secondary)" }}
               >
-                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>

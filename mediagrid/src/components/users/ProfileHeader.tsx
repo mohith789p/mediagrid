@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,7 +16,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 }) => {
   const { currentUser, followUser, unfollowUser, uploadProfileImage } =
     useAuth();
-  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -53,7 +52,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     if (!file) return;
 
     try {
-      setIsUploading(true);
       await uploadProfileImage(file);
       toast({
         title: "Profile updated",
@@ -66,8 +64,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         description: "Failed to update your profile picture.",
         variant: "destructive",
       });
-    } finally {
-      setIsUploading(false);
     }
   };
 

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import MainLayout from "@/components/layout/MainLayout";
 import PostList from "@/components/posts/PostList";
 import UserList from "@/components/users/UserList";
@@ -10,7 +9,6 @@ import { useAuth, UserProfile } from "@/contexts/AuthContext";
 import {
   collection,
   query,
-  where,
   orderBy,
   limit,
   getDocs,
@@ -51,7 +49,6 @@ const demoSuggestedUsers: UserProfile[] = [
 
 const ExplorePage: React.FC = () => {
   const { currentUser } = useAuth();
-  const router = useRouter();
   const { toast } = useToast();
 
   const [trendingPosts, setTrendingPosts] = useState<PostType[]>([]);
